@@ -1,0 +1,7 @@
+/* Only cache this public, content-free fallback. No photos, API results,
+   authentication pages, application HTML or write operations are cached. */
+const CACHE='pierre-studio-offline-v1';
+const OFFLINE='/offline.html';
+self.addEventListener('install',event=>{event.waitUntil((async()=>{const response=await fetch(OFFLINE,{credentials:'include',cache:'reload',redirect:'error'});if(!response.ok||!response.headers.get('content-type')?.includes('text/html'))throw new Error('Offline fallback unavailable');const html=await response.text();if(!html.includes('pierre-studio-offline-page'))throw new Error('Unexpected fallback');const cache=await caches.open(CACHE);await cache.put(OFFLINE,new Response(html,{headers:{'Content-Type':'text/html; charset=utf-8'}}));await self.skipWaiting();})());});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith('pierre-studio-offline-')&&key!==CACHE)await caches.delete(key);await self.clients.claim();})());});
+self.addEventListener('fetch',event=>{const r=event.request,u=new URL(r.url);if(r.method!=='GET'||r.mode!=='navigate'||u.origin!==self.location.origin||u.pathname!=='/')return;event.respondWith(fetch(r).catch(async()=>{const cache=await caches.open(CACHE);return await cache.match(OFFLINE)||new Response('Connexion internet requise pour ouvrir Pierre Studio.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}});}));});
