@@ -1,4 +1,0 @@
-export const publicationStatuses=['public','private','non-reference'] as const;
-export type CompletenessGallery={parentId?:string|null;tags?:string[]|null;status?:string|null;featuredPhoto?:{id?:string;urls?:Record<string,string>}|null};
-export function galleryCoverUrl(photo?:CompletenessGallery['featuredPhoto']){return photo?.urls?.small||photo?.urls?.medium||photo?.urls?.large||photo?.urls?.webp||photo?.urls?.original||'';}
-export function missingGalleryFields(g:CompletenessGallery){const fields:string[]=[];if(!g.featuredPhoto?.id||!galleryCoverUrl(g.featuredPhoto))fields.push('Vignette');if(!g.parentId&&!g.tags?.some(t=>t.trim()))fields.push('Tags');if(!publicationStatuses.includes(g.status as typeof publicationStatuses[number]))fields.push('Statut');return fields;}

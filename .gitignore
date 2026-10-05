@@ -1,7 +1,8 @@
 node_modules/
-.next/
-.env*
-!.env.example
-*.log
+dist/
+.astro/
+.env
+.env.*
 *.tsbuildinfo
+.test-build-*/
 .DS_Store

@@ -1,0 +1,23 @@
+DirectoryIndex index.html
+
+# Do not keep stale HTML or a stale service worker after an upload.
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "no-referrer"
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive"
+  Header always set X-Frame-Options "DENY"
+  <FilesMatch "\.(html|webmanifest)$|^sw\.js$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.[A-Za-z0-9_-]{8,}\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json application/manifest+json image/svg+xml
+</IfModule>

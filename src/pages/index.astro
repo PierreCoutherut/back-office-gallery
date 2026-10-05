@@ -1,0 +1,5 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StudioGate from '../components/StudioGate';
+---
+<Layout><StudioGate client:only="react"><main slot="fallback" class="studio-loading">Ouverture du studio…</main></StudioGate></Layout>
